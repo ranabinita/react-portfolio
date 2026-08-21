@@ -4,77 +4,64 @@ import ProjectCard from "./ProjectCard";
 const projects = [
   {
     title: "HealthRisk AI",
-
     type: "Personal Project",
-
     description:
       "A personalized disease risk prediction platform for disease risk assessment.",
-
     technologies: [
       "Python",
       "Django",
       "Machine Learning",
       "Scikit-learn",
     ],
-
     details: [
       "Developed a personalized health risk prediction platform using machine learning.",
       "Designed a Django-based dashboard for collecting health information and displaying prediction results.",
       "Implemented machine learning models for diabetes, heart disease, and stroke risk prediction.",
       "Added health history, risk visualization, recommendations, and downloadable reports.",
     ],
-
     github: "https://github.com/ranabinita/healthriskai",
   },
 
   {
     title: "AI Fake News Detector",
-
     type: "Final Year Group Project",
-
     description:
       "A machine learning application for classifying news content as real or fake.",
-
     technologies: [
       "Python",
       "TF-IDF",
       "Random Forest",
       "Node.js",
     ],
-
     details: [
       "Developed a real-time fake news classification system using machine learning.",
       "Implemented TF-IDF for transforming textual news content into numerical features.",
       "Trained a Random Forest classifier for real and fake news classification.",
       "Built a web-based interface using HTML, CSS, JavaScript, Node.js, and Express.",
     ],
-
-    github: "https://github.com/ranabinita/AI_Fake_News_Detector-",
+    github:
+      "https://github.com/ranabinita/AI_Fake_News_Detector-",
   },
 
   {
-    title: "ERP Management System",
-
+    title: "Account Management System",
     type: "Collaborative Project",
-
     description:
       "A web-based enterprise management system for managing business operations.",
-
     technologies: [
       "Django",
       "JavaScript",
       "HTML",
       "CSS",
     ],
-
     details: [
       "Contributed to the development of a modular ERP system using Django for managing business operations.",
       "Worked on sales, inventory, invoices, customers, products, and payment management modules.",
       "Developed reusable modal components and shared frontend functionality.",
       "Implemented and refined responsive interfaces using HTML, CSS, JavaScript, and Django templates.",
     ],
-
-    github: "https://github.com/sachinmhj/AccountingManageSys",
+    github:
+      "https://github.com/sachinmhj/AccountingManageSys",
   },
 ];
 

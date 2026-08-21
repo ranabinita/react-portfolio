@@ -6,7 +6,8 @@ function ProjectCard({ project, position, projectNumber, onClick }) {
     const getCardStyle = () => {
         if (position === 0) {
             return {
-                transform: "translateX(0) translateZ(80px) rotateY(0deg) scale(1)",
+                transform:
+                    "translateX(0) translateZ(80px) rotateY(0deg) scale(1)",
                 opacity: 1,
                 zIndex: 30,
             };
@@ -62,7 +63,7 @@ function ProjectCard({ project, position, projectNumber, onClick }) {
             </div>
 
             {/* Project Type */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
                 <p className="text-sm font-semibold uppercase tracking-wider text-indigo-600">
                     Project
                 </p>
@@ -106,8 +107,7 @@ function ProjectCard({ project, position, projectNumber, onClick }) {
 
             {/* Expanded Project Details */}
             {isExpanded && (
-                <div className="mt-8 border-t border-gray-200 pt-6">
-                    
+                <div className="mt-7 border-t border-gray-200 pt-6">
                     <h4 className="text-sm font-bold uppercase tracking-wider text-gray-900">
                         Key Contributions
                     </h4>
@@ -124,29 +124,38 @@ function ProjectCard({ project, position, projectNumber, onClick }) {
                             </li>
                         ))}
                     </ul>
-
-                    {/* GitHub */}
-                    <div className="mt-7 flex gap-3">
-                        <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(event) => event.stopPropagation()}
-                            className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-700"
-                        >
-                            GitHub ↗
-                        </a>
-                    </div>
                 </div>
             )}
 
-            {/* View Project */}
-            <button
-                onClick={handleViewProject}
-                className="mt-8 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+            {/* Action Buttons */}
+            <div
+                className={`flex items-center gap-3 ${
+                    isExpanded
+                        ? "mt-6 justify-between"
+                        : "mt-8 justify-end"
+                }`}
             >
-                {isExpanded ? "View Less" : "View Project"}
-            </button>
+                {/* GitHub */}
+                {isExpanded && (
+                    <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(event) => event.stopPropagation()}
+                        className="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-700"
+                    >
+                        GitHub ↗
+                    </a>
+                )}
+
+                {/* View Project / View Less */}
+                <button
+                    onClick={handleViewProject}
+                    className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700"
+                >
+                    {isExpanded ? "View Less" : "View Project"}
+                </button>
+            </div>
         </div>
     );
 }

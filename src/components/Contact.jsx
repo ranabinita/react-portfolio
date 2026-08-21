@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 
 function Contact() {
+  const form = useRef();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState("idle");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -16,27 +19,44 @@ function Contact() {
       ...current,
       [name]: value,
     }));
+
+    // Clear previous messages when user starts editing again
+    if (status !== "idle" && status !== "sending") {
+      setStatus("idle");
+    }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("Form submitted:", formData);
+    setStatus("sending");
 
-    setSubmitted(true);
+    try {
+      await emailjs.sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        form.current,
+        {
+          publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
+        }
+      );
 
-    setFormData({
-      name: "",
-      email: "",
-      message: "",
-    });
+      setStatus("success");
+
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+
+      setStatus("error");
+    }
   };
 
   return (
-    <section
-      id="contact"
-      className="bg-gray-50 py-24"
-    >
+    <section id="contact" className="bg-gray-50 py-24">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Heading */}
@@ -72,6 +92,7 @@ function Contact() {
 
             <div className="mt-8 space-y-5">
 
+              {/* Email */}
               <div>
                 <p className="text-sm font-semibold text-gray-900">
                   Email
@@ -82,6 +103,7 @@ function Contact() {
                 </p>
               </div>
 
+              {/* GitHub */}
               <div>
                 <p className="text-sm font-semibold text-gray-900">
                   GitHub
@@ -97,6 +119,7 @@ function Contact() {
                 </a>
               </div>
 
+              {/* LinkedIn */}
               <div>
                 <p className="text-sm font-semibold text-gray-900">
                   LinkedIn
@@ -115,8 +138,9 @@ function Contact() {
             </div>
           </div>
 
-          {/* Form */}
+          {/* Contact Form */}
           <form
+            ref={form}
             onSubmit={handleSubmit}
             className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
           >
@@ -138,7 +162,8 @@ function Contact() {
                 onChange={handleChange}
                 placeholder="Your name"
                 required
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                disabled={status === "sending"}
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-gray-100"
               />
             </div>
 
@@ -157,9 +182,10 @@ function Contact() {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="email address"
+                placeholder="Email address"
                 required
-                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                disabled={status === "sending"}
+                className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-gray-100"
               />
             </div>
 
@@ -180,22 +206,34 @@ function Contact() {
                 onChange={handleChange}
                 placeholder="Write your message..."
                 required
-                className="mt-2 w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                disabled={status === "sending"}
+                className="mt-2 w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 disabled:bg-gray-100"
               />
             </div>
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
-              className="mt-6 w-full rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white transition hover:bg-indigo-700"
+              disabled={status === "sending"}
+              className="mt-6 w-full rounded-lg bg-indigo-600 px-5 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Send Message
+              {status === "sending"
+                ? "Sending..."
+                : "Send Message"}
             </button>
 
             {/* Success Message */}
-            {submitted && (
+            {status === "success" && (
               <p className="mt-4 text-center text-sm font-medium text-green-600">
-                Thanks! Your message has been submitted.
+                ✓ Thanks! Your message has been sent successfully.
+              </p>
+            )}
+
+            {/* Error Message */}
+            {status === "error" && (
+              <p className="mt-4 text-center text-sm font-medium text-red-600">
+                ✕ Something went wrong. Please try again or email me
+                directly.
               </p>
             )}
 
