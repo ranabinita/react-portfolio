@@ -21,7 +21,6 @@ const projects = [
     ],
     github: "https://github.com/ranabinita/healthriskai",
   },
-
   {
     title: "AI Fake News Detector",
     type: "Final Year Group Project",
@@ -42,7 +41,6 @@ const projects = [
     github:
       "https://github.com/ranabinita/AI_Fake_News_Detector-",
   },
-
   {
     title: "Account Management System",
     type: "Collaborative Project",
@@ -67,65 +65,66 @@ const projects = [
 
 function Projects() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const nextProject = () => {
     setActiveIndex((current) => (current + 1) % projects.length);
+    setExpandedIndex(null); // Reset detail expansion on slide change
   };
 
   const previousProject = () => {
     setActiveIndex(
       (current) => (current - 1 + projects.length) % projects.length
     );
+    setExpandedIndex(null); // Reset detail expansion on slide change
+  };
+
+  const handleSelectIndex = (index) => {
+    setActiveIndex(index);
+    setExpandedIndex(null);
+  };
+
+  const toggleExpand = (index) => {
+    setExpandedIndex((current) => (current === index ? null : index));
   };
 
   return (
-    <section
-      id="projects"
-      className="overflow-hidden bg-gray-50 py-24"
-    >
-      <div className="mx-auto max-w-7xl px-6">
-
+    <section id="projects" className="bg-gray-50 py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        
         {/* Heading */}
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-semibold text-indigo-600">
-            MY WORK
-          </p>
-
-          <h2 className="mt-3 text-4xl font-bold text-gray-900 md:text-5xl">
+          <p className="font-semibold text-indigo-600">MY WORK</p>
+          <h2 className="mt-3 text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">
             Featured Projects
           </h2>
-
-          <p className="mt-5 leading-7 text-gray-600">
-            A selection of projects I've built while exploring
-            software development, machine learning, and modern web
-            technologies.
+          <p className="mt-4 text-sm text-gray-600 sm:text-base sm:leading-7">
+            A selection of projects I've built while exploring software
+            development, machine learning, and modern web technologies.
           </p>
         </div>
 
-        {/* 3D Stack */}
+        {/* Dynamic 3D Stack Container */}
         <div
-          className="relative mx-auto mt-16 h-[520px] w-full max-w-3xl"
-          style={{
-            perspective: "1200px",
-          }}
+          className="relative mx-auto mt-10 w-full max-w-3xl pt-4 pb-8"
+          style={{ perspective: "1200px" }}
         >
           <div
-            className="relative h-full w-full"
-            style={{
-              transformStyle: "preserve-3d",
-            }}
+            className="relative flex justify-center items-start"
+            style={{ transformStyle: "preserve-3d" }}
           >
             {projects.map((project, index) => {
               const position =
-                (index - activeIndex + projects.length) %
-                projects.length;
+                (index - activeIndex + projects.length) % projects.length;
 
               return (
                 <ProjectCard
                   key={project.title}
                   project={project}
                   position={position}
-                  projectNumber={ index +1 }
+                  projectNumber={index + 1}
+                  isExpanded={expandedIndex === index}
+                  onToggleExpand={() => toggleExpand(index)}
                   onClick={position === 0 ? nextProject : undefined}
                 />
               );
@@ -134,17 +133,19 @@ function Projects() {
         </div>
 
         {/* Controls */}
-        <div className="flex justify-center gap-4">
+        <div className="mt-8 flex justify-center gap-4">
           <button
             onClick={previousProject}
-            className="rounded-full border border-gray-300 bg-white px-5 py-3 font-semibold text-gray-700 shadow-sm transition hover:bg-gray-100"
+            aria-label="Previous project"
+            className="rounded-full border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-100"
           >
             ← Previous
           </button>
 
           <button
             onClick={nextProject}
-            className="rounded-full bg-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
+            aria-label="Next project"
+            className="rounded-full bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
           >
             Next →
           </button>
@@ -155,7 +156,7 @@ function Projects() {
           {projects.map((project, index) => (
             <button
               key={project.title}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => handleSelectIndex(index)}
               className={`h-2.5 rounded-full transition-all ${
                 index === activeIndex
                   ? "w-8 bg-indigo-600"
